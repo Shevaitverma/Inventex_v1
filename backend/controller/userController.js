@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
 const Token = require('../models/tokenModel');
 const crypto = require('crypto');
+const sendEmail = require("../utils/sendEmail");
 
 // function to generate jwt token.
 const generateToken = (id) => {
@@ -120,7 +121,7 @@ const loginUser = asyncHandler(async (req, res) =>{
         res.status(400);
         throw new Error("invalid email or password");
     }
-    
+
 });
 
 // ----------- logout user-----------
@@ -240,16 +241,59 @@ const forgotPassword = asyncHandler(async (req, res)=>{
         throw new Error("User does not exists.");
     }
     
+    // Delete token if it exists in DB
+    let token = await Token.findOne({userId: user._id});
+    if(token){
+        await token.deleteOne()
+    }
+
     // create reset token.
     let resetToken = crypto.randomBytes(32).toString("hex") + user._id;
 
     // hash token before saving to db
     const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
-    console.log(hashedToken);
 
-    res.send("Forgot password");
+    // saving the token to the database
+    await new Token({
+        userId: user._id,
+        token: hashedToken,
+        createdAt: Date.now(),
+        expiresAt: Date.now() + 10 * (60*1000) // 10 minutes
+    }).save()
 
+    // construct reset url 
+    const resetUrl = `${process.env.FORNTEND_URL}/resetpassword/${resetToken}`
+
+    // reset email
+    const message = `
+        <h2>hello ${user.name}</h2>
+        <p>Please use the line to reset your password</p>
+        <p>This link is only valid for 10 minutes</p>
+
+        <a href=${resetUrl} clicktraking=off>${resetUrl}</a>
+        <p>regards,</p>
+        <p>Inventex Team</p>
+    `;
+    const subject = "password reset requiest"
+    const send_to = user.email
+    const sent_from = process.env.EMAIL_USER
+    try {
+        await sendEmail(subject, message, send_to, sent_from)
+        res.status(200).json({
+            sucess: true,
+            message: "reset email sent"
+        })
+    } catch (error) {
+        res.status(500)
+        throw new Error("Email not send, try again")
+        
+    }
 });
+
+// reset password
+const resetpassword = asyncHandler(async(req, res)=>{
+    res.send("reset password")
+})
 
 
 
@@ -261,5 +305,6 @@ module.exports = {
     loginStatus,
     updateUser,
     changePassword,
-    forgotPassword
+    forgotPassword,
+    resetpassword
 }

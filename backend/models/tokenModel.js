@@ -10,7 +10,7 @@ const tokenSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    createAt:{
+    createdAt:{
         type: Date,
         required: true,
     },
