@@ -10,3 +10,20 @@ Tokens, usually referring to JSON Web Tokens (JWTs), are signed credentials enco
 #
 * Used "authMiddleware" as middlewalre to ensure authorized user is performing operations on it's own data by login token varification.
 #
+If register user exists
+* ![image](https://github.com/Shevaitverma/Inventex_v1/assets/54855567/bd768865-6c6b-44bb-b2b4-3bada21a5930)
+* ![image](https://github.com/Shevaitverma/Inventex_v1/assets/54855567/733f7be0-fdb0-4dd3-a256-48e418f9c2e1)
+# 
+For login user
+* ![image](https://github.com/Shevaitverma/Inventex_v1/assets/54855567/9d396d4f-e440-4b29-8192-18809ddbb9b5)
+#
+logout user
+* ![image](https://github.com/Shevaitverma/Inventex_v1/assets/54855567/d567728e-f26a-499f-80db-c92a92425f47)
+#
+update user
+* ![image](https://github.com/Shevaitverma/Inventex_v1/assets/54855567/0a62fd1e-6da0-46f7-80ad-4a951086d6bb)
+#
+get user data
+* ![image](https://github.com/Shevaitverma/Inventex_v1/assets/54855567/d8724905-ebfd-4e31-8014-4b28eed7aff6)
+
+
